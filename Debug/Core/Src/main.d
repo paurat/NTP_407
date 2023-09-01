@@ -88,7 +88,20 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h \
  ../USB_DEVICE/App/usb_device.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- ../USB_DEVICE/Target/usbd_conf.h
+ ../USB_DEVICE/Target/usbd_conf.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/api.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/netbuf.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/apps/httpd.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/apps/httpd_opts.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/iana.h \
+ ../Core/Inc/myapi.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/apps/fs.h \
+ ../Core/Inc/local_files.h ../Core/Inc/MyFlash.h \
+ ../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys/socket.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h \
+ ../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h \
+ ../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa/inet.h
 
 ../Core/Inc/main.h:
 
@@ -271,3 +284,31 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:
 
 ../USB_DEVICE/Target/usbd_conf.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/api.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/netbuf.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/apps/httpd.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/apps/httpd_opts.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/prot/iana.h:
+
+../Core/Inc/myapi.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/apps/fs.h:
+
+../Core/Inc/local_files.h:
+
+../Core/Inc/MyFlash.h:
+
+../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys/socket.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h:
+
+../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h:
+
+../Middlewares/Third_Party/LwIP/src/include/compat/posix/arpa/inet.h:
