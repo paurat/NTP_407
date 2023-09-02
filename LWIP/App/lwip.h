@@ -40,6 +40,16 @@
 #endif /* WITH_RTOS */
 
 /* USER CODE BEGIN 0 */
+ uint8_t getMAC(int n);
+ u32_t getGateway();
+ u32_t getNetmask();
+ u32_t getIP();
+const ip4_addr_t* getGatewayAddr();
+const ip4_addr_t* getNetmaskAddr();
+const ip4_addr_t* getIPAddr();
+ void setIP(u32_t addr);
+ void setGateway(u32_t addr);
+ void setNetmask(u32_t addr);
 
 /* USER CODE END 0 */
 

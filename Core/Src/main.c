@@ -511,7 +511,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 45000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -1012,11 +1012,56 @@ void StartDefaultTask(void const * argument)
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
+  httpd_init();
+  tcpecho_init();
+
+  memset(&user_info,0,sizeof(user_info));
+  	  				strncpy(user_info.ip,"192.168.0.68",13);
+  	  				strncpy(user_info.netmask,"255.255.255.0",14);
+  	  ip4_addr_t add;
+  	  inet_aton(user_info.ip, &add);
+  	  setIP(add.addr);
+
+  	ip4_addr_t mask;
+  	inet_aton(user_info.netmask, &mask);
+  	setNetmask(mask.addr);
+  	//int IPres=0;
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
-  }
+	  HAL_UART_Receive_IT (&huart2, (uint8_t*)&buff, 1);
+
+//	  		if(HAL_GPIO_ReadPin (GPIOI, Button_Pin)){
+//
+//	  			IPres=IPres+1;
+//	  		}
+//	  		else
+//	  		{
+//	  			HAL_GPIO_WritePin(Led_GPIO_Port, Led_Pin,GPIO_PIN_RESET);
+//	  			if(IPres>5){
+//	  				memset(&user_info,0,sizeof(user_info));
+//	  				strncpy(user_info.ip,"192.168.0.68",13);
+//	  				strncpy(user_info.netmask,"255.255.255.0",14);
+//	  				user_info.zone=12;
+//	  				//setIPaddr
+//	  				ip4_addr_t add;
+//	  				inet_aton(user_info.ip, &add);
+//	  				setIP(add.addr);
+//	  				//setNetMask
+//	  				ip4_addr_t mask;
+//	  				inet_aton(user_info.netmask, &mask);
+//	  				setNetmask(mask.addr);
+//	  			}
+//	  			IPres=0;
+//
+//	  		}
+	  		//HAL_GPIO_TogglePin(Led_GPIO_Port, Led1_Pin);
+//	  		HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
+	  		//HAL_UART_Receive(&huart7, (uint8_t*)RXstr, MESsize, 1000);
+	  		//HAL_UART_Transmit(&huart6, (uint8_t*)str, 8, 1000);
+//	  		HAL_Delay(1000);
+	  		//HAL_Delay(1000);
+	  	}
   /* USER CODE END 5 */
 }
 
@@ -1031,10 +1076,82 @@ void tcpecho_thread(void const * argument)
 {
   /* USER CODE BEGIN tcpecho_thread */
   /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+	struct netconn *conn;
+			err_t err,recv_err;
+			struct netbuf *buf;
+			uint16_t buf_data_len;
+
+			ntp_packet_t *ntp_packet_ptr;
+			//RTCDateTime ntpd_datetime;
+			//RTCDateTime ntpd_datetime;
+			//struct tm tm_;
+			//uint32_t tm_ms_;
+
+
+			/* Create a new connection identifier. */
+			conn = netconn_new(NETCONN_UDP);
+			if (conn!=NULL)
+			{
+				/* Bind connection to well known port number 7. */
+				err = netconn_bind(conn, NULL, 123);
+				if (err == ERR_OK)
+				{
+					while (1)
+					{
+						while (( recv_err = netconn_recv(conn, &buf)) == ERR_OK)
+						{
+							do
+							{
+								netbuf_data(buf, (void **)&ntp_packet_ptr, &buf_data_len);
+
+								if(buf_data_len < 48 || buf_data_len > 2048)
+								{
+									netbuf_delete(buf);
+									continue;
+								}
+								ntp_packet_ptr->li_vn_mode = (0 << 6) | (4 << 3) | (4); // Leap Warning: None, Version: NTPv4, Mode: 4 - Server
+								ntp_packet_ptr->stratum = ntpd_status.stratum;
+								ntp_packet_ptr->poll = 5; // 32s
+								ntp_packet_ptr->precision = -10; // ~1ms
+
+								ntp_packet_ptr->rootDelay = 0; // Delay from GPS clock is ~zero
+								ntp_packet_ptr->rootDispersion_s = 0;
+								ntp_packet_ptr->rootDispersion_f = htonl(NTP_MS_TO_FS_U16 * 1.0); // 1ms
+								ntp_packet_ptr->refId = ('G') | ('P' << 8) | ('S' << 16) | ('\0' << 24);
+								/* Move client's transmit timestamp into origin fields */
+								ntp_packet_ptr->origTm_s = ntp_packet_ptr->txTm_s;
+								ntp_packet_ptr->origTm_f = ntp_packet_ptr->txTm_f;
+
+								ntp_packet_ptr->refTm_s = time_ref_s;
+								ntp_packet_ptr->refTm_f = time_ref_f;
+
+								//rtcGetTime(&RTCD1, &ntpd_datetime);
+								//rtcConvertDateTimeToStructTm(&ntpd_datetime, &tm_, &tm_ms_);
+
+								ntp_packet_ptr->rxTm_s = htonl(rtc_read()- DIFF_SEC_1970_2036);//htonl(mktime(&tm_) - DIFF_SEC_1970_2036);
+								ntp_packet_ptr->rxTm_f = htonl((time_t)(((float)TIM2->CNT)/((float)TIM2->ARR)*4294967296.0));//htonl((NTP_MS_TO_FS_U32 * tm_ms_));
+
+								/* Copy into transmit timestamp fields */
+								ntp_packet_ptr->txTm_s = ntp_packet_ptr->rxTm_s;
+								ntp_packet_ptr->txTm_f = ntp_packet_ptr->rxTm_f;
+
+								netconn_send(conn, buf);
+							}
+							while (netbuf_next(buf) >= 0);
+
+							netbuf_delete(buf);
+						}
+						/* Close connection and discard connection identifier. */
+						//netconn_close(newconn);
+						//netconn_delete(newconn);
+						ntpd_status.requests_count++;
+					}
+				}
+				else
+				{
+					netconn_delete(conn);
+				}
+			}
   /* USER CODE END tcpecho_thread */
 }
 

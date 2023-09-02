@@ -46,7 +46,52 @@ uint8_t NETMASK_ADDRESS[4];
 uint8_t GATEWAY_ADDRESS[4];
 
 /* USER CODE BEGIN 2 */
+uint8_t getMAC(int n){
+	/* get MAC hardware address */
+	return gnetif.hwaddr[n];
+}
 
+u32_t getGateway(){
+	return ip4_addr_get_u32(netif_ip4_gw(&gnetif));
+}
+
+u32_t getNetmask(){
+	return ip4_addr_get_u32(netif_ip4_netmask(&gnetif));
+}
+
+u32_t getIP(){
+	return ip4_addr_get_u32(netif_ip4_addr(&gnetif));
+}
+
+const ip4_addr_t* getGatewayAddr(){
+	return netif_ip4_gw(&gnetif);
+}
+
+const ip4_addr_t* getNetmaskAddr(){
+	return netif_ip4_netmask(&gnetif);
+}
+
+const ip4_addr_t* getIPAddr(){
+	return netif_ip4_addr(&gnetif);
+}
+
+void setIP(u32_t addr){
+	ip4_addr_t temp;
+	temp.addr = addr;
+	netif_set_ipaddr(&gnetif,&temp);
+}
+
+void setGateway(u32_t addr){
+	ip4_addr_t temp;
+	temp.addr = addr;
+	netif_set_gw(&gnetif,&temp);
+}
+
+void setNetmask(u32_t addr){
+	ip4_addr_t temp;
+	temp.addr = addr;
+	netif_set_netmask(&gnetif,&temp);
+}
 /* USER CODE END 2 */
 
 /**

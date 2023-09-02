@@ -13,7 +13,7 @@ main.c:902:7:Hex_to_dec	48	static
 main.c:935:6:calc_crc	16	static
 main.c:963:8:rtc_read	88	static
 main.c:992:6:tcpecho_init	16	static
-main.c:1007:6:StartDefaultTask	16	static
-main.c:1030:6:tcpecho_thread	16	static
-main.c:1049:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:1066:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:1007:6:StartDefaultTask	32	static
+main.c:1075:6:tcpecho_thread	48	static
+main.c:1166:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:1183:6:Error_Handler	4	static,ignoring_inline_asm

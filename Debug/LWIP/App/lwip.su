@@ -1,1 +1,11 @@
-lwip.c:55:6:MX_LWIP_Init	24	static
+lwip.c:49:9:getMAC	16	static
+lwip.c:54:7:getGateway	4	static
+lwip.c:58:7:getNetmask	4	static
+lwip.c:62:7:getIP	4	static
+lwip.c:66:19:getGatewayAddr	4	static
+lwip.c:70:19:getNetmaskAddr	4	static
+lwip.c:74:19:getIPAddr	4	static
+lwip.c:78:6:setIP	24	static
+lwip.c:84:6:setGateway	24	static
+lwip.c:90:6:setNetmask	24	static
+lwip.c:100:6:MX_LWIP_Init	24	static
