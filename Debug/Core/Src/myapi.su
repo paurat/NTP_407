@@ -1,0 +1,3 @@
+myapi.c:12:5:fs_read_custom	24	static
+myapi.c:15:5:fs_open_custom	1800	static
+myapi.c:93:6:fs_close_custom	16	static

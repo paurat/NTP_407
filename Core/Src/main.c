@@ -288,7 +288,7 @@ int main(void)
 
     //start the web server
     int offset =0;
-   //ReadDeviceAddressOffset((char*) &user_info, sizeof(user_info), offset);
+   ReadDeviceAddressOffset((char*) &user_info, sizeof(user_info), offset);
    offset+=sizeof(user_info);
    //Обнуление PPS
    PPS_count=0;

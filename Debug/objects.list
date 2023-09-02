@@ -1,5 +1,8 @@
+"Core/Src/MyFlash.o"
 "Core/Src/freertos.o"
 "Core/Src/main.o"
+"Core/Src/myapi.o"
+"Core/Src/post_api.o"
 "Core/Src/stm32f4xx_hal_msp.o"
 "Core/Src/stm32f4xx_hal_timebase_tim.o"
 "Core/Src/stm32f4xx_it.o"
