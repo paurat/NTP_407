@@ -6,7 +6,7 @@
  */
 #include "MyFlash.h"
 #include "local_files.h"
-#define CONFIGURATION_START_ADDR 0x080E0000
+#define CONFIGURATION_START_ADDR 0x080e0000
 void clearFlash(){
 	static FLASH_EraseInitTypeDef EraseInitStruct;
 	/* Get the 1st sector to erase */

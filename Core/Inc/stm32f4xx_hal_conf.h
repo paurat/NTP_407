@@ -95,7 +95,7 @@
   *        (when HSE is used as system clock source, directly or through the PLL).
   */
 #if !defined  (HSE_VALUE)
-  #define HSE_VALUE    25000000U /*!< Value of the External oscillator in Hz */
+  #define HSE_VALUE    8000000U /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)
@@ -221,7 +221,7 @@
 /* Section 2: PHY configuration section */
 
 /* LAN8742A_PHY_ADDRESS Address*/
-#define LAN8742A_PHY_ADDRESS           1U
+#define LAN8742A_PHY_ADDRESS           0U
 /* PHY Reset delay these values are based on a 1 ms Systick interrupt*/
 #define PHY_RESET_DELAY                 0x000000FFU
 /* PHY Configuration delay */

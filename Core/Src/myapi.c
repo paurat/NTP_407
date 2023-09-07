@@ -33,7 +33,7 @@ int fs_open_custom(struct fs_file *file, const char *name){
 		RTC_TimeTypeDef timeStruct;
 
 		//hrtc.Instance = RTC;
-		if (gps.year[0]!='V'&&PPS_count>12){
+		if (gps.year[0]!='V'&&PPS_count>12){//gps.year[0]!='V'&&PPS_count>12
 			// Read actual date and time
 			HAL_RTC_GetTime(&hrtc, &timeStruct, FORMAT_BIN); // Read time first!
 			HAL_RTC_GetDate(&hrtc, &dateStruct, FORMAT_BIN);

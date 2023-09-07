@@ -249,41 +249,41 @@ int main(void)
     HAL_Delay(5000);
 
    //ON ZDA
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESZDA, 16, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESZDA, 16, 1000);
     HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONZDA, 10, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONZDA, 10, 1000);
     HAL_Delay(100);
 
     // OFF protokol
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESGGA, 16, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESGGA, 16, 1000);
     HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONGGA, 10, 1000);
-    HAL_Delay(100);
-
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESGLL, 16, 1000);
-    HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONGLL, 10, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONGGA, 10, 1000);
     HAL_Delay(100);
 
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESGSA, 16, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESGLL, 16, 1000);
     HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONGSA, 10, 1000);
-    HAL_Delay(100);
-
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESGSV, 16, 1000);
-    HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONGSV, 10, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONGLL, 10, 1000);
     HAL_Delay(100);
 
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESVTG, 16, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESGSA, 16, 1000);
     HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONVTG, 10, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONGSA, 10, 1000);
+    HAL_Delay(100);
+
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESGSV, 16, 1000);
+    HAL_Delay(100);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONGSV, 10, 1000);
+    HAL_Delay(100);
+
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESVTG, 16, 1000);
+    HAL_Delay(100);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONVTG, 10, 1000);
     HAL_Delay(100);
 
     //отключение и включение RMC на всякий
-    HAL_UART_Transmit(&huart2,(uint8_t*) MESRMC, 16, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) MESRMC, 16, 1000);
     HAL_Delay(100);
-    HAL_UART_Transmit(&huart2,(uint8_t*) CONRMC, 10, 1000);
+    HAL_UART_Transmit(&huart1,(uint8_t*) CONRMC, 10, 1000);
     HAL_Delay(100);
 
     //start the web server
@@ -361,8 +361,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 25;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -551,7 +551,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -689,7 +689,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	RTC_TimeTypeDef sTime = {0};
 	RTC_DateTypeDef sDate = {0};
-	if(huart == &huart2) {
+	if(huart == &huart1) {
 		//$ message start
 		if(buff[0]=='$'){
 			count=0;
@@ -882,7 +882,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 					dataTransmitted=0;
 				}
 
-				HAL_UART_Receive_IT (&huart2, (uint8_t *)buff, 1);
+				HAL_UART_Receive_IT (&huart1, (uint8_t *)buff, 1);
 				gps.errors[1]=ERRORS;
 				count++;
 			}
@@ -1014,10 +1014,11 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   httpd_init();
   tcpecho_init();
-
   memset(&user_info,0,sizeof(user_info));
-  	  				strncpy(user_info.ip,"192.168.0.68",13);
-  	  				strncpy(user_info.netmask,"255.255.255.0",14);
+  strncpy(user_info.ip,"192.168.0.68",13);
+  strncpy(user_info.netmask,"255.255.255.0",14);
+  user_info.zone=12;
+
   	  ip4_addr_t add;
   	  inet_aton(user_info.ip, &add);
   	  setIP(add.addr);
@@ -1025,11 +1026,11 @@ void StartDefaultTask(void const * argument)
   	ip4_addr_t mask;
   	inet_aton(user_info.netmask, &mask);
   	setNetmask(mask.addr);
-  	//int IPres=0;
+
   /* Infinite loop */
   for(;;)
   {
-	  HAL_UART_Receive_IT (&huart2, (uint8_t*)&buff, 1);
+	  HAL_UART_Receive_IT (&huart1, (uint8_t*)&buff, 1);
 
 //	  		if(HAL_GPIO_ReadPin (GPIOI, Button_Pin)){
 //
@@ -1076,7 +1077,7 @@ void tcpecho_thread(void const * argument)
 {
   /* USER CODE BEGIN tcpecho_thread */
   /* Infinite loop */
-	struct netconn *conn;
+			struct netconn *conn;
 			err_t err,recv_err;
 			struct netbuf *buf;
 			uint16_t buf_data_len;
