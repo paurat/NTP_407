@@ -5,7 +5,7 @@
 #include "lwip.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#define USER_PASS_BUFSIZE 256
+#define USER_PASS_BUFSIZE 512
 #define mymin(a,b) \
 		({ __typeof__ (a) _a = (a); \
 		__typeof__ (b) _b = (b); \
@@ -78,64 +78,64 @@ httpd_post_receive_data(void *connection, struct pbuf *p)
 
 	if (current_connection == connection) {
 		jsmn_parser parser;
-		jsmntok_t t[256]; /* We expect no more than 512 JSON tokens */
+		jsmntok_t t[128]; /* We expect no more than 512 JSON tokens */
 		jsmn_init(&parser);
 
 		int tokens = jsmn_parse(&parser, buf_data, strlen(buf_data), t, 128);
-//		for (int i = 0; i<tokens; i++){
-//			if (jsoneq(buf_data, &t[i], "IPaddress") == 0) {
-//				buf_data[t[i+1].end] = '\0';
-//				memset(user_info.ip,0,16);
-//				int len = mymin(16,t[i+1].end-t[i+1].start);
-//				strncpy(user_info.ip,&buf_data[t[i+1].start],len);
-//				i++;
-//				continue;
+		for (int i = 0; i<tokens; i++){
+			if (jsoneq(buf_data, &t[i], "IPaddress") == 0) {
+				buf_data[t[i+1].end] = '\0';
+				memset(user_info.ip,0,16);
+				int len = mymin(16,t[i+1].end-t[i+1].start);
+				strncpy(user_info.ip,&buf_data[t[i+1].start],len);
+				i++;
+				continue;
 			}
-//			if (jsoneq(buf_data, &t[i], "NetMask") == 0) {
-//				buf_data[t[i+1].end] = '\0';
-//				memset(user_info.netmask,0,16);
-//				int len = mymin(16,t[i+1].end-t[i+1].start);
-//				strncpy(user_info.netmask,&buf_data[t[i+1].start],len);
-//				i++;
-//				continue;
-//			}
-//			if (jsoneq(buf_data, &t[i], "Timezone") == 12) {
-//				user_info.zone = atoi(&buf_data[t[i+1].start]);
-//				i++;
-//				continue;
-//			}
-//			if (jsoneq(buf_data, &t[i], "contacts") == 0) {
-//				memset(user_info.contacts,0,INFOLEN);
-//				buf_data[t[i+1].end] = '\0';
-//				int len = mymin(INFOLEN,t[i+1].end-t[i+1].start);
-//				strncpy(user_info.contacts,&buf_data[t[i+1].start],len);
-//				i++;
-//				continue;
-//			}
-//		}
-//		//setIPaddr
-//		ip4_addr_t add;
-//		inet_aton(user_info.ip, &add);
-//		setIP(add.addr);
-//		//setNetMask
-//		ip4_addr_t mask;
-//		inet_aton(user_info.netmask, &mask);
-//		setNetmask(mask.addr);
-//
-//        clearFlash();
-//        int offset=0;
-//        WriteDeviceAddressOffset((char*) &user_info, sizeof(user_info), offset);
-//        offset+=sizeof(user_info);
-//		/* not returning ERR_OK aborts the connection, so return ERR_OK unless the
-//       connection is unknown */
-//		ret = ERR_OK;
-//	}else {
-//		ret = ERR_VAL;
-//	}
+			if (jsoneq(buf_data, &t[i], "NetMask") == 0) {
+				buf_data[t[i+1].end] = '\0';
+				memset(user_info.netmask,0,16);
+				int len = mymin(16,t[i+1].end-t[i+1].start);
+				strncpy(user_info.netmask,&buf_data[t[i+1].start],len);
+				i++;
+				continue;
+			}
+			if (jsoneq(buf_data, &t[i], "Timezone") == 0) {
+				user_info.zone = atoi(&buf_data[t[i+1].start]);
+				i++;
+				continue;
+			}
+			if (jsoneq(buf_data, &t[i], "contacts") == 0) {
+				memset(user_info.contacts,0,INFOLEN);
+				buf_data[t[i+1].end] = '\0';
+				int len = mymin(INFOLEN,t[i+1].end-t[i+1].start);
+				strncpy(user_info.contacts,&buf_data[t[i+1].start],len);
+				i++;
+				continue;
+			}
+		}
+		//setIPaddr
+		ip4_addr_t add;
+		inet_aton(user_info.ip, &add);
+		setIP(add.addr);
+		//setNetMask
+		ip4_addr_t mask;
+		inet_aton(user_info.netmask, &mask);
+		setNetmask(mask.addr);
+
+        clearFlash();
+        int offset=0;
+        WriteDeviceAddressOffset((char*) &user_info, sizeof(user_info), offset);
+        offset+=sizeof(user_info);
+		/* not returning ERR_OK aborts the connection, so return ERR_OK unless the
+       connection is unknown */
+		ret = ERR_OK;
+	}else {
+		ret = ERR_VAL;
+	}
 
 	/* this function must ALWAYS free the pbuf it is passed or it will leak memory */
 	pbuf_free(p);
-	ret = ERR_OK;
+	//ret = ERR_OK;
 	return ret;
 }
 
