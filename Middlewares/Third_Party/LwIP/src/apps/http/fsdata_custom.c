@@ -70,11 +70,11 @@ static const unsigned char FSDATA_ALIGN_PRE data__404_html[] FSDATA_ALIGN_POST =
 0x3e,};
 
 #if FSDATA_FILE_ALIGNMENT==1
-static const unsigned int dummy_align__info_html = 1;
+static const unsigned int dummy_align__index_html = 1;
 #endif
-static const unsigned char FSDATA_ALIGN_PRE data__info_html[] FSDATA_ALIGN_POST = {
-/* /info.html (11 chars) */
-0x2f,0x69,0x6e,0x66,0x6f,0x2e,0x68,0x74,0x6d,0x6c,0x00,0x00,
+static const unsigned char FSDATA_ALIGN_PRE data__index_html[] FSDATA_ALIGN_POST = {
+/* /index.html (12 chars) */
+0x2f,0x69,0x6e,0x64,0x65,0x78,0x2e,0x68,0x74,0x6d,0x6c,0x00,
 
 /* HTTP header */
 /* "HTTP/1.0 200 OK
@@ -302,14 +302,14 @@ sizeof(data__404_html) - 12,
 FS_FILE_FLAGS_HEADER_INCLUDED | FS_FILE_FLAGS_HEADER_PERSISTENT,
 }};
 
-const struct fsdata_file file__info_html[] = { {
+const struct fsdata_file file__index_html[] = { {
 file__404_html,
-data__info_html,
-data__info_html + 12,
-sizeof(data__info_html) - 12,
+data__index_html,
+data__index_html + 12,
+sizeof(data__index_html) - 12,
 FS_FILE_FLAGS_HEADER_INCLUDED | FS_FILE_FLAGS_HEADER_PERSISTENT,
 }};
 
-#define FS_ROOT file__info_html
+#define FS_ROOT file__index_html
 #define FS_NUMFILES 2
 

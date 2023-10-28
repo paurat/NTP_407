@@ -211,7 +211,23 @@ void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 }
 
 /* USER CODE BEGIN 4 */
+uint32_t crc32b(uint8_t *message, size_t size) {
+	int i, j;
+	uint32_t byte, crc, mask;
 
+	i = 0;
+	crc = 0xFFFFFFFF;
+	for(int k = 0; k<size;k++) {
+		byte = message[k]; // Get next byte.
+		crc = crc ^ byte;
+		for (j = 7; j >= 0; j--) { // Do eight times.
+			mask = -(crc & 1);
+			crc = (crc >> 1) ^ (0xEDB88320 & mask);
+		}
+		i = i + 1;
+	}
+	return ~crc;
+}
 /* USER CODE END 4 */
 
 /*******************************************************************************
@@ -249,7 +265,11 @@ static void low_level_init(struct netif *netif)
   heth.Init.MediaInterface = ETH_MEDIA_INTERFACE_MII;
 
   /* USER CODE BEGIN MACADDRESS */
+  u32_t id = crc32b((uint8_t *)UID_BASE, 8);
 
+      MACAddr[3] = (id>>16)&0xFF;
+      MACAddr[4] =(id>>8)&0xFF;
+      MACAddr[5] = id&0xFF;
   /* USER CODE END MACADDRESS */
 
   hal_eth_init_status = HAL_ETH_Init(&heth);
